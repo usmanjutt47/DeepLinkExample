@@ -1,44 +1,41 @@
 import * as React from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
-import HomeScreen from "./screens/HomeScreen";
-import ProductScreen from "./screens/ProductScreen";
-import ProductDetailsScreen from "./screens/ProductDetailsScreen";
+import { Button, View, Text } from "react-native";
+import { WebView } from "react-native-webview";
 
-const MainStack = createStackNavigator();
-const ProductStack = createStackNavigator();
+const Stack = createStackNavigator();
 
-function ProductStackScreen() {
+function HomeScreen({ navigation }) {
   return (
-    <ProductStack.Navigator>
-      <ProductStack.Screen name="ProductList" component={ProductScreen} />
-      <ProductStack.Screen
-        name="ProductDetails"
-        component={ProductDetailsScreen}
+    <View style={{ flex: 1 }}>
+      <WebView
+        source={{ uri: "https://www.npmjs.com/package/react-native-webview" }}
+        style={{ flex: 1 }}
       />
-    </ProductStack.Navigator>
+      <Button
+        title="Go to Profile"
+        onPress={() => navigation.navigate("Profile")}
+      />
+    </View>
   );
 }
 
-const linking = {
-  prefixes: ["mydeeplinkapp://"],
-  config: {
-    screens: {
-      Home: "home",
-      Products: "products",
-      ProductList: "products",
-      ProductDetails: "products/:productId/:productName",
-    },
-  },
-};
+function ProfileScreen() {
+  return (
+    <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+      <Text>Profile Screen</Text>
+    </View>
+  );
+}
 
 export default function App() {
   return (
-    <NavigationContainer linking={linking}>
-      <MainStack.Navigator initialRouteName="Home">
-        <MainStack.Screen name="Home" component={HomeScreen} />
-        <MainStack.Screen name="Products" component={ProductStackScreen} />
-      </MainStack.Navigator>
+    <NavigationContainer>
+      <Stack.Navigator initialRouteName="Home">
+        <Stack.Screen name="Home" component={HomeScreen} />
+        <Stack.Screen name="Profile" component={ProfileScreen} />
+      </Stack.Navigator>
     </NavigationContainer>
   );
 }
