@@ -1,20 +1,44 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import * as React from "react";
+import { NavigationContainer } from "@react-navigation/native";
+import { createStackNavigator } from "@react-navigation/stack";
+import HomeScreen from "./screens/HomeScreen";
+import ProductScreen from "./screens/ProductScreen";
+import ProductDetailsScreen from "./screens/ProductDetailsScreen";
 
-export default function App() {
+const MainStack = createStackNavigator();
+const ProductStack = createStackNavigator();
+
+function ProductStackScreen() {
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <ProductStack.Navigator>
+      <ProductStack.Screen name="ProductList" component={ProductScreen} />
+      <ProductStack.Screen
+        name="ProductDetails"
+        component={ProductDetailsScreen}
+      />
+    </ProductStack.Navigator>
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
+const linking = {
+  prefixes: ["mydeeplinkapp://"],
+  config: {
+    screens: {
+      Home: "home",
+      Products: "products",
+      ProductList: "products",
+      ProductDetails: "products/:productId/:productName",
+    },
   },
-});
+};
+
+export default function App() {
+  return (
+    <NavigationContainer linking={linking}>
+      <MainStack.Navigator initialRouteName="Home">
+        <MainStack.Screen name="Home" component={HomeScreen} />
+        <MainStack.Screen name="Products" component={ProductStackScreen} />
+      </MainStack.Navigator>
+    </NavigationContainer>
+  );
+}
